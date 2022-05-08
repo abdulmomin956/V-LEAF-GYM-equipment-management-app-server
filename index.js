@@ -20,6 +20,8 @@ async function run() {
         await client.connect();
         const productCollection = client.db("gleaf").collection("products");
 
+
+
         app.get('/products', async (req, res) => {
             const cursor = productCollection.find({});
             const products = await cursor.toArray();
@@ -39,6 +41,30 @@ async function run() {
             const product = await productCollection.deleteOne(query);
             res.send(product);
         })
+
+        app.post('/product/', async (req, res) => {
+            const newProduct = req.body;
+            const result = await productCollection.insertOne(newProduct);
+            res.send(result);
+        })
+
+        app.put('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const oldProduct = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            // console.log(oldProduct);
+            const updatedDoc = {
+                $set: {
+                    qty: oldProduct.qty,
+                    sold: oldProduct.sold
+                }
+            };
+            const result = await productCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
+
+
     }
     finally {
 
