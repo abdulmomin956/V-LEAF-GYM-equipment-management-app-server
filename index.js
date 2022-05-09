@@ -57,7 +57,6 @@ async function run() {
 
         app.get('/user/:uid', async (req, res) => {
             const uid = req.params.uid;
-            console.log(uid);
             const query = { uid: uid };
             const cursor = userCollection.find(query);
             const orders = await cursor.toArray();
@@ -70,7 +69,6 @@ async function run() {
             const oldProduct = req.body;
             const filter = { _id: ObjectId(id) };
             const options = { upsert: true };
-            // console.log(oldProduct);
             const updatedDoc = {
                 $set: {
                     qty: oldProduct.qty,
