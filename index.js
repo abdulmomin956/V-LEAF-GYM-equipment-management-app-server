@@ -19,6 +19,7 @@ async function run() {
     try {
         await client.connect();
         const productCollection = client.db("gleaf").collection("products");
+        const userCollection = client.db("gleaf").collection("user");
 
 
 
@@ -46,6 +47,21 @@ async function run() {
             const newProduct = req.body;
             const result = await productCollection.insertOne(newProduct);
             res.send(result);
+        })
+
+        app.post('/user/', async (req, res) => {
+            const newProduct = req.body;
+            const result = await userCollection.insertOne(newProduct);
+            res.send(result);
+        })
+
+        app.get('/order', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const cursor = orderCollection.find(query);
+            const orders = await cursor.toArray();
+            res.send(orders);
+
         })
 
         app.put('/product/:id', async (req, res) => {
