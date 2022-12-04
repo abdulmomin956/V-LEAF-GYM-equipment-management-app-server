@@ -20,6 +20,7 @@ async function run() {
         await client.connect();
         const productCollection = client.db("gleaf").collection("products");
         const userCollection = client.db("gleaf").collection("user");
+        const catCollection = client.db("gleaf").collection("category");
 
 
 
@@ -61,7 +62,6 @@ async function run() {
             const cursor = userCollection.find(query);
             const orders = await cursor.toArray();
             res.send(orders);
-
         })
 
         app.put('/product/:id', async (req, res) => {
@@ -79,6 +79,25 @@ async function run() {
             res.send(result);
         })
 
+        app.post('/category', async (req, res) => {
+            const data = req.body
+            const result = await catCollection.insertOne(data)
+            res.send(result)
+        })
+
+        app.get('/categories', async (req, res) => {
+            const result = await catCollection.find({}).toArray();
+            res.send(result)
+        })
+        app.patch('/category/:id', async (req, res) => {
+            const id = req.params
+            const data = req.body
+            const updatedDoc = {
+                $set: data
+            }
+            const result = await catCollection.updateOne({ _id: ObjectId(id) }, updatedDoc)
+            res.send(result)
+        })
 
     }
     finally {
