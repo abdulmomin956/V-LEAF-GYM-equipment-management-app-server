@@ -114,5 +114,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log('yes this is fine')
 })
-
-module.exports = app;
